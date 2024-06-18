@@ -17,15 +17,64 @@ namespace DA
             _dbContext = dbContext;
         }
 
-        public List<Producto> ObtenerTodos(String orderBy)
+        public List<Producto> ObtenerTodos()
         {
             try
             {
-                return _dbContext.Productos.OrderBy(orderBy).ToList();
+                return _dbContext.Productos.ToList();
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public List<Producto> ObtenerFiltrados(string filtro)
+        {
+            try
+            {
+                return _dbContext.Productos.Where(filtro).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Dictionary<int, int> ObtenerPopularidadProductos()
+        {
+            try
+            {
+                var popularidad = new Dictionary<int, int>();
+
+                var detallesOrden = _dbContext.DetallesOrdens.ToList();
+
+                foreach (var detalle in detallesOrden)
+                {
+                    if (popularidad.ContainsKey(detalle.ProductoId))
+                    {
+                        
+                        if (detalle.Cantidad.HasValue)//Verificar si detalle.Canntidad tiene valor
+                        {
+                            //Obtenemos ese valor entero y lo sumamos o asignamos.
+                            popularidad[detalle.ProductoId] += detalle.Cantidad.Value;
+                        }
+                    }
+                    else
+                    {
+                        // Asignar la cantidad solo si detalle.Cantidad tiene un valor
+                        if (detalle.Cantidad.HasValue)
+                        {
+                            popularidad[detalle.ProductoId] = detalle.Cantidad.Value;
+                        }
+                    }
+                }
+
+                return popularidad;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error al obtener la popularidad de productos: " + ex.Message);
             }
         }
 

@@ -99,10 +99,44 @@ namespace BL
                 throw new Exception(e.Message);
             }
         }
-
         public List<Producto> BuscarPorCodigo(string codigo) {
             return productosDA.BuscarPorCodigo(codigo);
-        } 
+        }
+
+
+        public List<Producto> ObtenerTodosOrdenados(string orderBy)
+        {
+            try
+            {
+                var productos = productosDA.ObtenerTodos();
+
+                switch (orderBy?.ToLower())
+                {
+                    case "precioasc":
+                        return productos.OrderBy(p => p.Precio).ToList();
+                    case "preciodesc":
+                        return productos.OrderByDescending(p => p.Precio).ToList();
+                    case "masreciente":
+                        return productos.OrderByDescending(p => p.ProductoId).ToList(); // Suponiendo que ProductoID es un proxy de fecha de creación
+                    case "maspopular":
+                        var popularidad = productosDA.ObtenerPopularidadProductos();
+                        return productos.OrderByDescending(p => popularidad.ContainsKey(p.ProductoId) ? popularidad[p.ProductoId] : 0).ToList();
+                    default:
+                        return productos.ToList();
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Manejar errores específicos relacionados con operaciones inválidas
+                throw new Exception("Ocurrió un error al ordenar los productos: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Manejar otros tipos de errores genéricos
+                throw new Exception("Ocurrió un error inesperado: " + ex.Message);
+            }
+        }
+
 
 
     }
