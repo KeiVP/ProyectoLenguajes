@@ -10,14 +10,14 @@ namespace BL
 {
     public class ProductosBL
     {
-        private ProductosDA productDA;
+        private ProductosDA productosDA;
 
         public ProductosBL(VentaRopaContext context)
         {
-            productDA = new ProductosDA(context);
+            productosDA = new ProductosDA(context);
         }
 
-        public async Task<List<Producto>> getAllProducts(string orderBy, string orderType)
+        public List<Producto> ObtenerTodos(string orderBy, string orderType)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace BL
                 {
                     orderTypeQuery = orderType;
                 }
-                return await productDA.getAllProducts(orderByQuery + " " + orderTypeQuery);
+                return productosDA.ObtenerTodos(orderByQuery + " " + orderTypeQuery);
             }
             catch (Exception error)
             {
@@ -40,11 +40,11 @@ namespace BL
         }
 
 
-        public async Task<Product> getProductById(string id)
+        public Product obtenerPorId(int id)
         {
             try
             {
-                return await productDA.getProductById(id);
+                return productosDA.ObtenerPorId(id);
             }
             catch (Exception error)
             {
@@ -52,11 +52,11 @@ namespace BL
             }
         }
 
-        public async Task<int> createProduct(Product product)
+        public int Agregar(Product producto)
         {
             try
             {
-                return await productDA.createProduct(product);
+                return productosDA.Agregar(producto);
             }
             catch (Exception error)
             {
@@ -64,12 +64,13 @@ namespace BL
             }
         }
 
-        public async Task<int> editProduct(string id, Product product)
+        public int Actualizar(int id, Producto producto)
         {
 
             try
             {
-                return await productDA.editProduct(id, product);
+                
+                return productosDA.Actualizar(id, producto);
             }
             catch (Exception error)
             {
@@ -77,17 +78,31 @@ namespace BL
             }
         }
 
-        public async Task<int> deleteProductById(string id)
+        public int Eliminar(int id)
         {
             try
             {
-                return await productDA.deleteProductById(id);
+                return productosDA.Eliminar(id);
             }
             catch (Exception error)
             {
                 throw new Exception(error.Message);
             }
         }
+
+        public List<Producto> BuscarPorNombre(string nombre) {
+            try
+            {
+                return productosDA.BuscarPorNombre(nombre);
+            }
+            catch (Exception e) {
+                throw new Exception(error.Message);
+            }
+        }
+
+        public List<Producto> BuscarPorCodigo(string codigo) {
+            return productosDA.BuscarPorCodigo(codigo);
+        } 
 
 
     }

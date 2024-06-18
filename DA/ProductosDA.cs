@@ -9,7 +9,7 @@ namespace DA
 {
     public class ProductosDA
     {
-        private readonly VentaRopaContext _dbContext;
+        private  VentaRopaContext _dbContext;
 
         public ProductosDA(VentaRopaContext dbContext)
         {
@@ -18,44 +18,94 @@ namespace DA
 
         public List<Producto> ObtenerTodos()
         {
-            return _dbContext.Productos.ToList();
+            try
+            {
+                return _dbContext.Productos.ToList();
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Producto ObtenerPorId(int id)
         {
-            return _dbContext.Productos.FirstOrDefault(p => p.ProductoId == id);
+            try
+            {
+                return _dbContext.Productos.FirstOrDefault(p => p.ProductoId == id);
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void Agregar(Producto producto)
         {
-            _dbContext.Productos.Add(producto);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Productos.Add(producto);
+                _dbContext.SaveChanges();
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public void Actualizar(Producto producto)
+        public void Actualizar(int id, Producto producto)
         {
-            _dbContext.Productos.Update(producto);
-            _dbContext.SaveChanges();
+            try
+            {
+                Producto productoExistente = ObtenerPorId(id);
+                productoExistente = producto.Nombre;
+                productoExistente = producto.CategoriaId;
+                productoExistente = producto.Descripcion;
+                productoExistente = producto.Codigo;
+                productoExistente = producto.Talla;
+                productoExistente = producto.Precio;
+                productoExistente = producto.Imagen;
+                productoExistente = producto.Stock;
+                _dbContext.Productos.Update(producto);
+                _dbContext.SaveChanges();
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
         }
 
         public void Eliminar(int id)
         {
-            var producto = _dbContext.Productos.FirstOrDefault(p => p.ProductoId == id);
-            if (producto != null)
+            try
             {
-                _dbContext.Productos.Remove(producto);
-                _dbContext.SaveChanges();
+                var producto = _dbContext.Productos.FirstOrDefault(p => p.ProductoId == id);
+                if (producto != null)
+                {
+                    _dbContext.Productos.Remove(producto);
+                    _dbContext.SaveChanges();
+                }
             }
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        
         }
 
-        public List<Producto> BuscarPorNombre(string codigoNombre)
+        public List<Producto> BuscarPorNombre(string Nombre)
         {
-            return _dbContext.Productos.Where(p => p.Codigo.Contains(codigoNombre) ;
+            try
+            {
+                return _dbContext.Productos.Where(p => p.Codigo.Contains(Nombre) ;
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
         }
 
         public List<Producto> BuscarPorCodigo(string codigo)
         {
-            return _dbContext.Productos.Where(p =>  p.Nombre.Contains(codigo)).ToList();
+            try
+            {
+                return _dbContext.Productos.Where(p => p.Nombre.Contains(codigo)).ToList();
+            }
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
         }
 
 
