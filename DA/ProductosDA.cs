@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
 namespace DA
@@ -16,12 +17,13 @@ namespace DA
             _dbContext = dbContext;
         }
 
-        public List<Producto> ObtenerTodos()
+        public List<Producto> ObtenerTodos(String orderBy)
         {
             try
             {
-                return _dbContext.Productos.ToList();
-            }catch (Exception ex)
+                return _dbContext.Productos.OrderBy(orderBy).ToList();
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -38,33 +40,35 @@ namespace DA
             }
         }
 
-        public void Agregar(Producto producto)
+        public int Agregar(Producto producto)
         {
             try
             {
                 _dbContext.Productos.Add(producto);
                 _dbContext.SaveChanges();
+                return producto.ProductoId;
             }catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public void Actualizar(int id, Producto producto)
+        public int Actualizar(int id, Producto producto)
         {
             try
             {
                 Producto productoExistente = ObtenerPorId(id);
-                productoExistente = producto.Nombre;
-                productoExistente = producto.CategoriaId;
-                productoExistente = producto.Descripcion;
-                productoExistente = producto.Codigo;
-                productoExistente = producto.Talla;
-                productoExistente = producto.Precio;
-                productoExistente = producto.Imagen;
-                productoExistente = producto.Stock;
+                productoExistente.Nombre = producto.Nombre;
+                productoExistente.CategoriaId = producto.CategoriaId;
+                productoExistente.Descripcion = producto.Descripcion;
+                productoExistente.Codigo = producto.Codigo;
+                productoExistente.Talla = producto.Talla;
+                productoExistente.Precio = producto.Precio;
+                productoExistente.Imagen = producto.Imagen;
+                productoExistente.Stock = producto.Stock;
                 _dbContext.Productos.Update(producto);
                 _dbContext.SaveChanges();
+                return producto.ProductoId;
             } catch (Exception ex) {
                 throw new Exception(ex.Message);
             }
@@ -79,6 +83,7 @@ namespace DA
                 {
                     _dbContext.Productos.Remove(producto);
                     _dbContext.SaveChanges();
+                   
                 }
             }
             catch (Exception ex) {
@@ -91,11 +96,14 @@ namespace DA
         {
             try
             {
-                return _dbContext.Productos.Where(p => p.Codigo.Contains(Nombre) ;
-            } catch (Exception ex) {
+                return _dbContext.Productos.Where(p => p.Codigo.Contains(Nombre)).ToList();
+            }
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
+
 
         public List<Producto> BuscarPorCodigo(string codigo)
         {

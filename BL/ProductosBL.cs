@@ -40,7 +40,7 @@ namespace BL
         }
 
 
-        public Product obtenerPorId(int id)
+        public Producto obtenerPorId(int id)
         {
             try
             {
@@ -52,11 +52,11 @@ namespace BL
             }
         }
 
-        public int Agregar(Product producto)
+        public void Agregar(Producto producto)
         {
             try
             {
-                return productosDA.Agregar(producto);
+              productosDA.Agregar(producto);
             }
             catch (Exception error)
             {
@@ -78,11 +78,11 @@ namespace BL
             }
         }
 
-        public int Eliminar(int id)
+        public void Eliminar(int id)
         {
             try
             {
-                return productosDA.Eliminar(id);
+                productosDA.Eliminar(id);
             }
             catch (Exception error)
             {
@@ -96,7 +96,7 @@ namespace BL
                 return productosDA.BuscarPorNombre(nombre);
             }
             catch (Exception e) {
-                throw new Exception(error.Message);
+                throw new Exception(e.Message);
             }
         }
 
