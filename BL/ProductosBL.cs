@@ -17,21 +17,11 @@ namespace BL
             productosDA = new ProductosDA(context);
         }
 
-        public List<Producto> ObtenerTodos(string orderBy, string orderType)
+        public List<Producto> ObtenerTodos()
         {
             try
-            {
-                string orderByQuery = "Id";
-                if (orderBy != null) //Si no se especificó el ordenamiento, o sea si viene null, utilizamos el por defecto (OrderByQuery)
-                {
-                    orderByQuery = orderBy;
-                }
-                string orderTypeQuery = "asc";
-                if (orderType != null)
-                {
-                    orderTypeQuery = orderType;
-                }
-                return productosDA.ObtenerTodos(orderByQuery + " " + orderTypeQuery);
+            {  
+                return productosDA.ObtenerTodos();
             }
             catch (Exception error)
             {
@@ -99,7 +89,7 @@ namespace BL
                 throw new Exception(e.Message);
             }
         }
-        public List<Producto> BuscarPorCodigo(string codigo) {
+        public List<Producto> BuscarPorCodigo(int codigo) {
             return productosDA.BuscarPorCodigo(codigo);
         }
 

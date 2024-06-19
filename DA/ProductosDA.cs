@@ -107,10 +107,8 @@ namespace DA
             try
             {
                 Producto productoExistente = ObtenerPorId(id);
-                productoExistente.Nombre = producto.Nombre;
                 productoExistente.CategoriaId = producto.CategoriaId;
                 productoExistente.Descripcion = producto.Descripcion;
-                productoExistente.Codigo = producto.Codigo;
                 productoExistente.Talla = producto.Talla;
                 productoExistente.Precio = producto.Precio;
                 productoExistente.Imagen = producto.Imagen;
@@ -145,7 +143,7 @@ namespace DA
         {
             try
             {
-                return _dbContext.Productos.Where(p => p.Codigo.Contains(Nombre)).ToList();
+                return _dbContext.Productos.Where(p => p.Descripcion.Contains(Nombre)).ToList();
             }
             catch (Exception ex)
             {
@@ -154,11 +152,11 @@ namespace DA
         }
 
 
-        public List<Producto> BuscarPorCodigo(string codigo)
+        public List<Producto> BuscarPorCodigo(int codigo)
         {
             try
             {
-                return _dbContext.Productos.Where(p => p.Nombre.Contains(codigo)).ToList();
+                return _dbContext.Productos.Where(p => p.ProductoId == codigo).ToList();
             }
             catch (Exception ex) {
                 throw new Exception(ex.Message);
