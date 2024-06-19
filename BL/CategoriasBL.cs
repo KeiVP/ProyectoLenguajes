@@ -1,28 +1,30 @@
-﻿using Models;
+﻿using DA;
+using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq.Dynamic.Core;
 
-namespace DA
+namespace BL
 {
-    public class CategoriasDA
+    public class CategoriasBL
     {
-        private VentaRopaContext _dbContext;
 
-        public CategoriasDA(VentaRopaContext dbContext)
+        private CategoriasDA categoriasDA;
+
+        public CategoriasBL(VentaRopaContext context)
         {
-            _dbContext = dbContext; 
+            categoriasDA = new CategoriasDA(context);
         }
 
         public List<Categoria> ObtenerTodos()
         {
             try
             {
-                return _dbContext.Categoria.ToList();
-                   
+                return categoriasDA.ObtenerTodos();
+
             }
             catch (Exception ex)
             {
@@ -34,7 +36,7 @@ namespace DA
         {
             try
             {
-                return _dbContext.Categoria.FirstOrDefault(c => c.CategoriaId == id);
+                return categoriasDA.ObtenerPorId(id);
             }
             catch (Exception ex)
             {
@@ -46,25 +48,18 @@ namespace DA
         {
             try
             {
-                _dbContext.Categoria.Add(categoria);
-                _dbContext.SaveChanges();
-                return categoria.CategoriaId;
+                return categoriasDA.Agregar(categoria);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-
         public int Actualizar(int id, Categoria categoria)
         {
             try
             {
-                Categoria categoriaExistente = ObtenerPorId(id);
-                categoriaExistente.Descripcion = categoria.Descripcion;
-                _dbContext.Categoria.Update(categoria);
-                _dbContext.SaveChanges();
-                return categoria.CategoriaId;
+                return categoriasDA.Actualizar(id, categoria);
             }
             catch (Exception ex)
             {
@@ -76,18 +71,14 @@ namespace DA
         {
             try
             {
-                var categoria = _dbContext.Categoria.FirstOrDefault(c => c.CategoriaId == id);
-                if (categoria != null)
-                {
-                    _dbContext.Categoria.Remove(categoria);
-                    _dbContext.SaveChanges();
-                }
+               categoriasDA.Eliminar(id);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+
 
     }
 }
