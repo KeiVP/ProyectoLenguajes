@@ -31,6 +31,22 @@ namespace DA
             }
         }
 
+        public bool UsuarioExistente (string usuarioNombre, string usuarioContraseña)
+        {
+            try
+            {
+                var usuario = _dbContext.Usuarios.FirstOrDefault(u =>
+            u.NombreUsuario == usuarioNombre && u.Contraseña == usuarioContraseña);
+                return true;
+
+            }catch (Exception ex)
+            {
+                return false;
+            }
+            
+            
+        }
+
         public Usuario ObtenerPorNombreUsuario(string id)
         {
             try
