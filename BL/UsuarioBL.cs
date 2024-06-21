@@ -31,13 +31,12 @@ namespace BL
             }
         }
 
-        public Usuario ObtenerPorNombreUsuario(string id)
+        public Usuario ObtenerUsuario(string nombreUsuario, string contraseña)
         {
             try
             {
-                return usuarioDA.ObtenerPorNombreUsuario(id);
-            }
-            catch (Exception ex)
+                return usuarioDA.ObtenerUsuario(nombreUsuario, contraseña);
+            }catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

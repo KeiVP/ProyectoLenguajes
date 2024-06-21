@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,9 @@ namespace DA
         {
             try
             {
-                return _dbContext.Clientes.FirstOrDefault(c => c.ClienteId == id);
+                return _dbContext.Clientes.Include(c
+                    => c.NombreUsuarioNavigation).FirstOrDefault(c // Incluir usuario asociado
+                    => c.ClienteId == id);
             }
             catch (Exception ex)
             {
@@ -44,22 +47,23 @@ namespace DA
             }
         }
 
-        public int Actualizar(int id, Cliente cliente)
+        public int Actualizar(Cliente cliente)
         {
             try
             {
-                Cliente clienteExistente = ObtenerPorId(id);
-                clienteExistente.ClienteId = cliente.ClienteId;
-                clienteExistente.Nombre = cliente.Nombre;
-                clienteExistente.Apellido = cliente.Apellido;
-                clienteExistente.Pais = cliente.Pais;
-                clienteExistente.Direccion = cliente.Direccion;
-                clienteExistente.Nacimiento = cliente.Nacimiento;
+                if (cliente != null)
+                {
+                    _dbContext.Clientes.Update(cliente);
+                    _dbContext.SaveChanges();
+                    return cliente.ClienteId;
+                }
+                else
+                {
+                    throw new Exception("Cliente vacio.");
 
-                _dbContext.Clientes.Update(cliente);
-                _dbContext.SaveChanges();
-                return cliente.ClienteId;
-            }
+                }
+
+             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);

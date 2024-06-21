@@ -31,27 +31,13 @@ namespace DA
             }
         }
 
-        public bool UsuarioExistente (string usuarioNombre, string usuarioContraseña)
+      
+        public Usuario ObtenerUsuario(string nombreUsuario, string contrasena)
         {
             try
             {
-                var usuario = _dbContext.Usuarios.FirstOrDefault(u =>
-            u.NombreUsuario == usuarioNombre && u.Contraseña == usuarioContraseña);
-                return true;
-
-            }catch (Exception ex)
-            {
-                return false;
-            }
-            
-            
-        }
-
-        public Usuario ObtenerPorNombreUsuario(string id)
-        {
-            try
-            {
-                return _dbContext.Usuarios.FirstOrDefault(c => c.NombreUsuario == id);
+                return _dbContext.Usuarios
+                .FirstOrDefault(u => u.NombreUsuario == nombreUsuario && u.Contraseña == contrasena);
             }
             catch (Exception ex)
             {
