@@ -71,12 +71,12 @@ namespace DA
         }
 
 
-        //Si se implementa una nueva tabla llamada Direcciones, de aquí para abajo se elimina y se crea una nueva clase
-        public int AgregarDirecciones(string direccion, int clienteID) { //Implica una nueva tabla direcciones
+       
+        public int AgregarDirecciones(Direccion direccion, int clienteID) { //Implica una nueva tabla direcciones
             try {
                 Cliente cliente = ObtenerPorId(clienteID);
-                cliente.Direccion = direccion;
-                _dbContext.Update(cliente);
+                direccion.ClienteID = cliente;
+                _dbContext.Direcciones.Add(direccion);
                 _dbContext.SaveChanges();
                 return cliente.ClienteId;
 
@@ -86,14 +86,17 @@ namespace DA
             }
         }
 
-        public int EditarDireccion(string direccion, int clienteID) {
+        public int EditarDireccion(Direccion direccion, int clienteID) {
             try {
 
-                Cliente cliente = ObtenerPorId(clienteID);
-                cliente.Direccion = direccion;
-                _dbContext.Update(cliente);
+
+                Direccion direccionPorActualizar = obtenerDireccionPorCliente(clienteID);
+                direccionPorActualizar.DireccionId = direccion.DireccionId;
+                direccionPorActualizar.Descripcion = direccion.Descripcion;
+                direccionPorActualizar.ClienteID = direccion.ClienteID;
+                _dbContext.Direcciones.Update(direccionPorActualizar);
                 _dbContext.SaveChanges();
-                return cliente.ClienteId;
+                return direccion.DireccionId;
             
             }catch (Exception ex)
             {
@@ -105,11 +108,10 @@ namespace DA
         public int EliminarDireccion(int clienteID) {
             try
             {
-                Cliente cliente = ObtenerPorId(clienteID);
-                cliente.Direccion = null;
-                _dbContext.Update(cliente);
+                Direccion direccionPorEliminar = obtenerDireccionPorCliente(clienteID);
+                _dbContext.Direcciones.Remove(direccionPorEliminar);
                 _dbContext.SaveChanges();
-                return cliente.ClienteId;
+                return direccionPorEliminar.DireccionId;
 
             }
             catch (Exception ex)
@@ -118,5 +120,15 @@ namespace DA
                 throw new Exception(ex.Message);
             }
         }
+
+        public Direccion obtenerDireccionPorCliente(int clienteID) {
+            try {
+                return _dbContext.Direcciones.FirstOrDefault(d => d.ClienteID.ClienteId == clienteID);
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        
     }
 }

@@ -72,17 +72,34 @@ namespace DA
         {
             try
             {
+                // Obtener el token existente de la base de datos
                 TokenPago tokenExistente = ObtenerTokenPorId(id);
+
+                // Verificar si el token existe
+                if (tokenExistente == null)
+                {
+                    throw new Exception("El token no existe.");
+                }
+
+                // Actualizar las propiedades del token existente con las nuevas
                 tokenExistente.Descripcion = token.Descripcion;
-                _dbContext.TokenPagos.Update(token);
+                tokenExistente.TarjetaId = token.TarjetaId; // Actualizar otras propiedades si es necesario
+
+                // Marcar el token existente como modificado
+                _dbContext.TokenPagos.Update(tokenExistente);
+
+                // Guardar los cambios en la base de datos
                 _dbContext.SaveChanges();
-                
-                return token.TokenId;
+
+                // Devolver el ID del token actualizado
+                return tokenExistente.TokenId;
             }
             catch (Exception ex)
             {
+                // Manejar la excepción y lanzar una nueva
                 throw new Exception(ex.Message);
             }
         }
+
     }
 }

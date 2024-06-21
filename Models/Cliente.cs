@@ -20,10 +20,13 @@ public partial class Cliente
     public string? Direccion { get; set; }
 
     public string? Pais { get; set; }
+    public virtual ICollection<Direccion> Direcciones { get; set; } // Nueva colección de direcciones
 
-    public virtual Usuario? NombreUsuarioNavigation { get; set; }
+
+public virtual Usuario? NombreUsuarioNavigation { get; set; }
 
     public virtual ICollection<Orden> Ordens { get; set; } = new List<Orden>();
+    
 
-    public virtual Tarjetum? Tarjeta { get; set; }
+public virtual Tarjetum? Tarjeta { get; set; }
 }
